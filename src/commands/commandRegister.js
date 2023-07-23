@@ -1,5 +1,8 @@
 import { REST, Collection, Routes } from "discord.js";
 import mix from "./mix.js";
+import "../loadEnv.js";
+
+const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
 
 const commands = [mix];
 
@@ -14,9 +17,7 @@ export const commandRegister = (client) => {
 
 export const deployCommands = () => {
   const commansJson = commands.map((command) => command.data.toJSON());
-  const rest = new REST().setToken(
-    "MTEzMjQ2MjQ0MTgxNzcxODgwNA.GniDVo.ejqT8EElnLkzB4K2b6lZQnpzRLHokiMAD8V_yQ"
-  );
+  const rest = new REST().setToken(DISCORD_TOKEN);
 
   (async () => {
     try {
@@ -25,10 +26,7 @@ export const deployCommands = () => {
       );
 
       const data = await rest.put(
-        Routes.applicationGuildCommands(
-          "1132462441817718804",
-          "700761715041632369"
-        ),
+        Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
         { body: commansJson }
       );
       console.log(

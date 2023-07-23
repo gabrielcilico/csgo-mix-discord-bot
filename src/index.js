@@ -1,11 +1,9 @@
 // import ready from "./listeners/ready";
 import { Client, Events, IntentsBitField, GatewayIntentBits } from "discord.js";
-import dotenv from "dotenv";
 import { commandRegister } from "./commands/commandRegister.js";
 import subscribe from "./actions/subscribe.js";
 import sort from "./actions/sort.js";
-
-dotenv.config();
+import "./loadEnv.js";
 
 const { DISCORD_TOKEN } = process.env;
 
