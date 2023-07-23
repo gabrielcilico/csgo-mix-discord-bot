@@ -1,12 +1,13 @@
 // import ready from "./listeners/ready";
 import { Client, Events, IntentsBitField, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
-import commandHandler from "./commands/handler.js";
+import { commandRegister } from "./commands/commandRegister.js";
+import subscribe from "./actions/subscribe.js";
+import sort from "./actions/sort.js";
+
 dotenv.config();
 
-const { DISCORD_TOKEN, PREFIX } = process.env;
-
-let players = [];
+const { DISCORD_TOKEN } = process.env;
 
 const client = new Client({
   intents: [
@@ -16,6 +17,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
+commandRegister(client);
 
 client.on(Events.ClientReady, async () => {
   if (!client.user || !client.application) {
@@ -24,10 +26,28 @@ client.on(Events.ClientReady, async () => {
   console.log(`BOT ${client.user.username} is online`);
 });
 
-client.on(Events.MessageCreate, async (message) => {
-  const text = message.content;
-  if (text.startsWith(PREFIX)) {
-    await commandHandler(message);
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction.isButton()) {
+    if (interaction.customId === "subscribe") subscribe(interaction);
+    if (interaction.customId === "sort") sort(interaction);
+    return;
+  }
+  if (interaction.isStringSelectMenu()) {
+    return;
+  }
+  const command = interaction.client.commands.get(interaction.commandName);
+  if (!command) {
+    console.error(`No command matching ${interaction.commandName} was found.`);
+    return;
+  }
+  try {
+    await command(interaction);
+  } catch (e) {
+    console.error(
+      `Error on call command ${
+        interaction.commandName
+      }. Stack: ${JSON.stringify(e)}`
+    );
   }
 });
 
