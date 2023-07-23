@@ -32,6 +32,7 @@ const subscribe = async (interaction) => {
   const response = await interaction.reply({
     content: `${interaction.user}, selecione seu level!`,
     components: [row],
+    ephemeral: true,
   });
 
   const collectorFilter = (i) => i.user.id === interaction.user.id;
@@ -42,7 +43,7 @@ const subscribe = async (interaction) => {
       time: 60000 * 10,
     });
     if (confirmation) {
-      const lvl = parseInt(confirmation.values[0]);
+      let lvl = parseInt(confirmation.values[0]);
       save({ author: interaction.user, lvl });
       interaction.editReply({
         content: `${interaction.user} (${lvl}) confirmado!`,
