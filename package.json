@@ -1,0 +1,28 @@
+{
+  "name": "csgo-mix-discord-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot to sort teams of mix matchs",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gabrielcilico/csgo-mix-discord-bot.git"
+  },
+  "author": "gabrielcilico <gabrielcilico@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.45.0"
+  },
+  "bugs": {
+    "url": "https://github.com/gabrielcilico/csgo-mix-discord-bot/issues"
+  },
+  "homepage": "https://github.com/gabrielcilico/csgo-mix-discord-bot#readme",
+  "keywords": []
+}
