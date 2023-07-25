@@ -1,4 +1,4 @@
-import { save } from "../services/playersRepository.js";
+import { getAll, save } from "../services/playersRepository.js";
 import {
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
@@ -21,6 +21,20 @@ const createLevels = () => {
 };
 
 const subscribe = async (interaction) => {
+  const players = getAll();
+  if (
+    players.length >= 10 &&
+    players.every((player) => player.author.id !== interaction.user.id)
+  ) {
+    interaction.reply({
+      content: "Infelizmente este MIX já está lotado :/",
+      ephemeral: true,
+    });
+    setTimeout(async () => await interaction.deleteReply(), 1000 * 3);
+    return;
+  }
+  const mixMessage = interaction.message;
+
   const levelSelector = new StringSelectMenuBuilder()
     .setCustomId("level")
     .setPlaceholder("Selecione seu level na GamersClub [0-21]")
@@ -49,6 +63,8 @@ const subscribe = async (interaction) => {
         content: `${interaction.user} (${lvl}) confirmado!`,
         components: [],
       });
+      mixMessage.edit(`${players.length || 0} jogadores registrados...`);
+      setTimeout(async () => await interaction.deleteReply(), 1000 * 3);
     }
   } catch (e) {
     await interaction.editReply({

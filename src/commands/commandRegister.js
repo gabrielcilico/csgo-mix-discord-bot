@@ -1,6 +1,6 @@
 import { REST, Collection, Routes } from "discord.js";
 import mix from "./mix.js";
-import "../loadEnv.js";
+import "../../loadEnv.js";
 
 const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
 

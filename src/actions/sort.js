@@ -1,14 +1,11 @@
 import { getAll } from "../services/playersRepository.js";
 import { EmbedBuilder } from "discord.js";
 
+import actionButtons from "../components/actionButtons.js";
+
 const sort = async (interaction) => {
   const values = getAll();
-  // if (!values || values.length <= 5) {
-  //   interaction.reply({
-  //     content: `Você(s) tem ${values.length} jogador(es). É preciso no mínimo 6 para sortear um MIX.`,
-  //   });
-  //   return;
-  // }
+
   values.sort((a, b) => b.lvl - a.lvl);
   const teamA = [];
   const teamB = [];
@@ -41,9 +38,9 @@ const sort = async (interaction) => {
 
   const date = new Date();
   const title = `Mix [${date.getTime()}]`;
-  const timeAName = `Time A (${match.teamA.level}) - ${
-    match.teamA.players.length ?? 0
-  }/5`;
+  const timeAName = `${match.teamA.players.length ?? 0}/5 - (${
+    match.teamA.level
+  }) Time A`;
   const timeBName = `Time B (${match.teamB.level}) - ${
     match.teamB.players.length ?? 0
   }/5`;
@@ -59,11 +56,16 @@ const sort = async (interaction) => {
   const sortedMatch = new EmbedBuilder()
     .setColor(0x8844ee)
     .setTitle(title)
-    .setDescription(`Gerado à(s) ${date.toLocaleString()}`)
+    .setDescription(`${values.length} jogador(es) inscrito(s).`)
     .addFields(
       {
         name: timeAName,
         value: teamMemberEvaluate(match.teamA),
+        inline: true,
+      },
+      {
+        name: "X",
+        value: "-\n-\n-\n-\n-\n",
         inline: true,
       },
       {
@@ -78,8 +80,15 @@ const sort = async (interaction) => {
     })
     .setTimestamp();
 
-  interaction.reply({
+  interaction.message.edit({
     embeds: [sortedMatch],
+    components: [actionButtons()],
   });
+
+  await interaction.reply({
+    content: "Novo MIX criado!",
+    ephemeral: true,
+  });
+  setTimeout(async () => await interaction.deleteReply(), 1000 * 3);
 };
 export default sort;
